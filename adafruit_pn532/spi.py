@@ -62,11 +62,14 @@ class PN532_SPI(PN532):
     """Driver for the PN532 connected over SPI. Pass in a hardware or bitbang
     SPI device & chip select digitalInOut pin. Optional IRQ pin (not used),
     reset pin and debugging output."""
-    def __init__(self, spi, cs_pin, *, irq=None, reset=None, debug=False, baudrate):
+    def __init__(self, spi, cs_pin, *, irq=None, reset=None, debug=False, baudrate=None):
         """Create an instance of the PN532 class using SPI"""
         self.debug = debug
         self._irq = irq
-        self._spi = spi_device.SPIDevice(spi, cs_pin, baudrate=baudrate)
+        if baudrate is not None:
+            self._spi = spi_device.SPIDevice(spi, cs_pin, baudrate=baudrate)
+        else:
+            self._spi = spi_device.SPIDevice(spi, cs_pin)
         super().__init__(debug=debug, reset=reset)
 
     def _wakeup(self):
